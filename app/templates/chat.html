@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Agent Chat</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1e1e2f;
+            color: #e6e6e6;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        h2 {
+            text-align: center;
+            color: #f1f1f1;
+        }
+        .chat-box {
+            background-color: #2a2a3b;
+            border-radius: 8px;
+            padding: 1rem;
+            height: 500px;
+            overflow-y: auto;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            margin-bottom: 1rem;
+        }
+        .message {
+            margin-bottom: 1rem;
+            line-height: 1.5;
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            max-width: 80%;
+            display: inline-block;
+            clear: both;
+        }
+        .user {
+            background-color: #404053;
+            color: #f1f1f1;
+            float: right;
+        }
+        .agent {
+            background-color: #363b4f;
+            color: #10a37f;
+            float: left;
+        }
+        form {
+            display: flex;
+            align-items: center;
+        }
+        textarea {
+            flex: 1;
+            resize: none;
+            padding: 0.5rem;
+            font-size: 1rem;
+            border-radius: 6px;
+            border: 1px solid #444;
+            margin-right: 0.5rem;
+            background-color: #2f2f3f;
+            color: #e6e6e6;
+        }
+        button {
+            padding: 0.5rem 1rem;
+            font-size: 1.2rem;
+            background-color: #10a37f;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0e8c6a;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>AI Agent Chat</h2>
+        <div class="chat-box" id="chat-box">
+            {% for msg in history %}
+                <div class="message {{ msg.role }}">
+                    <strong>{{ msg.label }}:</strong> {{ msg.text }}
+                </div>
+            {% endfor %}
+        </div>
+        <form method="post" action="/chat">
+            <textarea name="user_input" rows="2" id="user_input" placeholder="Napiš zprávu..." autofocus></textarea>
+            <button type="submit">➤</button>
+        </form>
+    </div>
+
+    <script>
+        // Odeslání Enterem
+        document.getElementById('user_input').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                this.form.submit();
+            }
+        });
+
+        // Scroll na konec chatu
+        const chatBox = document.getElementById('chat-box');
+        chatBox.scrollTop = chatBox.scrollHeight;
+    </script>
+</body>
+</html>

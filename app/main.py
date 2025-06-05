@@ -1,61 +1,38 @@
-from fastapi import FastAPI, Request
-from pydantic import BaseModel
+from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse
-import uvicorn
-import requests
+from fastapi.templating import Jinja2Templates
+from llama_cpp import Llama
 import os
-import html
 
 app = FastAPI()
+templates = Jinja2Templates(directory="templates")
 
-OLLAMA_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
-MODEL = "gemma3:4b"
+MODEL_PATH = "./models/google_gemma-3-4b-it-qat-Q4_0.gguf"
+llm = Llama(model_path=MODEL_PATH, n_ctx=2048, n_threads=4)
 
 conversation_history = []
 
-class Message(BaseModel):
-    user_input: str
-
 @app.get("/", response_class=HTMLResponse)
-async def index():
-    history_html = "<br><br>".join(html.escape(msg) for msg in conversation_history)
-    return HTMLResponse(content=f"""
-    <html>
-        <head><title>Agent Chat</title></head>
-        <body>
-            <h2>AI Agent Chat</h2>
-            <form method="post" action="/chat">
-                <textarea name="user_input" rows="4" cols="50"></textarea><br>
-                <input type="submit" value="Send">
-            </form>
-            <h3>Conversation:</h3>
-            <div>{history_html}</div>
-        </body>
-    </html>
-    """)
+async def index(request: Request):
+    history = [
+        {"role": "user" if "User:" in msg else "agent",
+         "label": "Ty" if "User:" in msg else "Agent",
+         "text": msg.split(":", 1)[1].strip()}
+        for msg in conversation_history
+    ]
+    return templates.TemplateResponse("chat.html", {"request": request, "history": history})
 
 @app.post("/chat", response_class=HTMLResponse)
-async def chat(request: Request):
-    form = await request.form()
-    user_input = form["user_input"]
-    conversation_history.append(f"<b>You:</b> {user_input}")
+async def chat(request: Request, user_input: str = Form(...)):
+    conversation_history.append(f"User: {user_input}")
+    prompt = "\n".join([msg.replace("User:", "User:").replace("Agent:", "Assistant:") for msg in conversation_history])
+    prompt += f"\nUser: {user_input}\nAssistant:"
 
-    prompt = "\n".join([msg.replace("<b>You:</b>", "User:").replace("<b>Agent:</b>", "Assistant:") for msg in conversation_history])
-
-    payload = {
-        "model": MODEL,
-        "prompt": prompt + f"\nUser: {user_input}\nAssistant:",
-        "stream": False
-    }
     try:
-        response = requests.post(f"{OLLAMA_URL}/api/generate", json=payload, timeout=30)
-        response.raise_for_status()
-        agent_reply = response.json().get("response", "[no response]")
+        output = llm(prompt, max_tokens=512, stop=["User:", "Assistant:"], echo=False)
+        agent_reply = output["choices"][0]["text"].strip()
     except Exception as e:
-        agent_reply = f"[error: {e}]"
+        agent_reply = f"[chyba: {e}]"
 
-    conversation_history.append(f"<b>Agent:</b> {agent_reply}")
-    return await index()
-
-if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    conversation_history.append(f"Agent: {agent_reply}")
+    return await index(request)
