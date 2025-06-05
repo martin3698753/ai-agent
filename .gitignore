@@ -9,3 +9,7 @@ __pycache__/
 .idea/
 .vscode/
 docker-compose.override.yml
+
+# Ignore model files
+app/models/*
+!app/models/.gitkeep
