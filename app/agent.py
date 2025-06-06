@@ -1,27 +1,21 @@
+"""Utility for interacting with a local Llama.cpp model."""
+
 import os
-import requests
-import time
+from llama_cpp import Llama
 
-OLLAMA_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
-MODEL = "gemma3:4b"
+# Model path can be overridden via environment variable
+MODEL_PATH = os.getenv(
+    "MODEL_PATH", "./models/google_gemma-3-4b-it-qat-Q4_0.gguf"
+)
 
-def ask_llm(prompt):
-    url = f"{OLLAMA_URL}/api/generate"
-    payload = {
-        "model": MODEL,
-        "prompt": prompt,
-        "stream": False
-    }
+# Initialise a single model instance so it can be reused across requests
+llm = Llama(model_path=MODEL_PATH, n_ctx=2048, n_threads=4)
 
+
+def ask_llm(prompt: str, *, max_tokens: int = 512) -> str:
+    """Generate a response from the local Llama model."""
     try:
-        response = requests.post(url, json=payload, timeout=10)
-        response.raise_for_status()
-        return response.json().get("response", "No response")
-
-    except requests.exceptions.ConnectionError:
-        return "❌ Ollama není dostupná (Connection refused)."
-
-    except requests.exceptions.RequestException as e:
-        if response.status_code == 500:
-            return "❌ Ollama běží, ale model není načten. Spusť ho ručně: `ollama run gemma3:4b` nebo `curl`."
-        return f"⚠️ Chyba při komunikaci s Ollamou: {e}"
+        output = llm(prompt, max_tokens=max_tokens, stop=["User:", "Assistant:"], echo=False)
+        return output["choices"][0]["text"].strip()
+    except Exception as e:
+        return f"[chyba: {e}]"
