@@ -83,11 +83,16 @@
         <div class="chat-box" id="chat-box">
             {% for msg in history %}
                 <div class="message {{ msg.role }}">
-                    <strong>{{ msg.label }}:</strong> {{ msg.text }}
+                    <strong>{% if msg.role == 'user' %}Ty{% else %}Agent{% endif %}:</strong>
+                    {% if msg.image %}
+                        <br><img src="{{ msg.image }}" style="max-width:100%;"><br>
+                    {% endif %}
+                    {{ msg.text }}
                 </div>
             {% endfor %}
         </div>
-        <form method="post" action="/chat">
+        <form method="post" action="/chat" enctype="multipart/form-data">
+            <input type="file" name="image" accept="image/*" style="margin-right:0.5rem;">
             <textarea name="user_input" rows="2" id="user_input" placeholder="Napiš zprávu..." autofocus></textarea>
             <button type="submit">➤</button>
         </form>
