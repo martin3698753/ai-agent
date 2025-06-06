@@ -2,7 +2,10 @@ from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 import os
-from agent import ask_llm
+import requests
+
+# URL of the LLM service. Can be overridden via environment variable
+LLM_SERVER_URL = os.getenv("LLM_SERVER_URL", "http://llm:8001/generate")
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -29,7 +32,12 @@ async def chat(request: Request, user_input: str = Form(...)):
     )
     prompt += "\nAssistant:"
 
-    agent_reply = ask_llm(prompt)
+    try:
+        response = requests.post(LLM_SERVER_URL, json={"prompt": prompt})
+        response.raise_for_status()
+        agent_reply = response.json().get("text", "")
+    except Exception as e:
+        agent_reply = f"[chyba: {e}]"
 
     conversation_history.append(f"Agent: {agent_reply}")
     return await index(request)
