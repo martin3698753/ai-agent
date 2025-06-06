@@ -7,7 +7,7 @@ from llama_cpp import Llama
 MODEL_PATH = os.getenv("MODEL_PATH", "./models/google_gemma-3-4b-it-qat-Q4_0.gguf")
 
 # Initialise a single model instance so it can be reused across requests
-llm = Llama(model_path=MODEL_PATH, n_ctx=2048, n_threads=4)
+llm = Llama(model_path=MODEL_PATH, n_ctx=2048, n_threads=2)
 
 
 def ask_llm(prompt: str, *, max_tokens: int = 512) -> str:
