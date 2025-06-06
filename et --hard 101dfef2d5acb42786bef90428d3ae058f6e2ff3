@@ -1,0 +1,62 @@
+[33mcommit bfe0a496f84c5382a7812cace8cae187e7a93a18[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Merge: 101dfef 5a7e1f7
+Author: martin3698753 <101400442+martin3698753@users.noreply.github.com>
+Date:   Fri Jun 6 14:59:02 2025 +0200
+
+    Merge pull request #4 from martin3698753/codex/review-project-for-bugs
+    
+    Add session history and image upload UI
+
+[33mcommit 5a7e1f718492a307c8d446351d5304460392981c[m[33m ([m[1;31morigin/codex/review-project-for-bugs[m[33m)[m
+Author: martin3698753 <101400442+martin3698753@users.noreply.github.com>
+Date:   Fri Jun 6 14:58:49 2025 +0200
+
+    Add image upload support and per-session history
+
+[33mcommit 101dfef2d5acb42786bef90428d3ae058f6e2ff3[m
+Author: martin3698753 <martinek8425@gmail.com>
+Date:   Fri Jun 6 14:08:09 2025 +0200
+
+    a
+
+[33mcommit c169f79379cf9e7a1d5e60e80566f892d78d4339[m
+Merge: 2623986 15d938e
+Author: martin3698753 <101400442+martin3698753@users.noreply.github.com>
+Date:   Fri Jun 6 12:43:39 2025 +0200
+
+    Merge pull request #2 from martin3698753/codex/analyze-code-functionality
+    
+    Switch to llama.cpp backend
+
+[33mcommit 15d938e5ea0599ad5fa3209f4eb9fd96d660a469[m
+Author: martin3698753 <101400442+martin3698753@users.noreply.github.com>
+Date:   Fri Jun 6 12:43:26 2025 +0200
+
+    use local llama model
+
+[33mcommit 2623986444b8786b6a51db540a884ec1b203f45d[m
+Merge: 58b631b c8ac61f
+Author: martin3698753 <101400442+martin3698753@users.noreply.github.com>
+Date:   Thu Jun 5 17:19:42 2025 +0200
+
+    Merge pull request #1 from martin3698753/codex/set-up-ai-agent-server-with-web-ui
+    
+    Ignore models directory
+
+[33mcommit c8ac61fad439540bb2a8fff11f9041084ff58524[m[33m ([m[1;31morigin/codex/set-up-ai-agent-server-with-web-ui[m[33m)[m
+Author: martin3698753 <101400442+martin3698753@users.noreply.github.com>
+Date:   Thu Jun 5 17:11:03 2025 +0200
+
+    Ignore models directory
+
+[33mcommit 58b631b9df82bc1b7798785d4da75a3b5846fbc5[m
+Author: martin3698753 <martinek8425@gmail.com>
+Date:   Thu Jun 5 16:50:20 2025 +0200
+
+    ffff
+
+[33mcommit cb336843256f9ff7609e047294a265949d333af4[m
+Author: martin3698753 <martinek8425@gmail.com>
+Date:   Wed Jun 4 20:12:39 2025 +0200
+
+    init commit
