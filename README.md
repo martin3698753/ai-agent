@@ -38,4 +38,6 @@ docker compose up --build
 ```
 
 The chat UI will be available on port `8000` and the LLM service on `8001`.
+The LLM API exposes a POST `/generate` endpoint for text generation.
+Visiting `http://localhost:8001/` will return a simple status message.
 

@@ -14,6 +14,11 @@ llm = Llama(model_path=MODEL_PATH, n_ctx=2048, n_threads=2)
 
 app = FastAPI()
 
+@app.get("/")
+async def root():
+    """Simple health check endpoint."""
+    return {"status": "ok"}
+
 class Prompt(BaseModel):
     prompt: str
     max_tokens: int = 512
