@@ -1,6 +1,8 @@
 # AI Agent Project
 
-This repository provides a small FastAPI server that exposes a chat page backed by a local [llama.cpp](https://github.com/ggerganov/llama.cpp) model. The model is loaded using `llama-cpp-python`.
+This repository provides a small FastAPI chat server backed by a
+local [llama.cpp](https://github.com/ggerganov/llama.cpp) model. The server and
+model can run either together or as two separate containers.
 
 ## Requirements
 
@@ -17,6 +19,8 @@ Place your GGUF model in `app/models` and set the `MODEL_PATH` environment varia
 
 ## Running
 
+### Local run
+
 Start the FastAPI server with uvicorn:
 
 ```bash
@@ -24,4 +28,16 @@ uvicorn main:app --host 0.0.0.0 --port 8000 --app-dir app
 ```
 
 Visit `http://localhost:8000` in your browser to chat with the model.
+
+### Docker Compose
+
+To run the server and the model in separate containers:
+
+```bash
+docker compose up --build
+```
+
+The chat UI will be available on port `8000` and the LLM service on `8001`.
+The LLM API exposes a POST `/generate` endpoint for text generation.
+Visiting `http://localhost:8001/` will return a simple status message.
 

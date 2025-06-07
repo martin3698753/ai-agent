@@ -1,8 +1,14 @@
+version: '3'
 services:
-  agent:
+  server:
     build: ./app
-    network_mode: "host"
+    ports:
+      - "8000:8000"
+    environment:
+      - LLM_SERVER_URL=http://llm:8001/generate
+  llm:
+    build: ./llm_service
     volumes:
-      - ./app:/app
-    working_dir: /app
-    command: uvicorn main:app --host 0.0.0.0 --port 8000
+      - ./app/models:/app/models
+    ports:
+      - "8001:8001"
